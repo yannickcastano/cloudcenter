@@ -7,6 +7,7 @@ curl https://raw.githubusercontent.com/yannickcastano/cloudcenter/master/simpleA
 
 #-- change MySQL root password 
 sudo bash -c 'echo "[mysqld]" >> /etc/mysql/my.cnf'
+sudo bash -c 'echo "bind-address = 0.0.0.0" >> /etc/mysql/my.cnf'
 sudo bash -c 'echo "skip-grant-tables" >> /etc/mysql/my.cnf'
 sudo service mysql restart
 mysql -u root < /tmp/db-root-access.sql
