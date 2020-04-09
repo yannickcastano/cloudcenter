@@ -17,12 +17,12 @@ while(!feof($myfile)) {
   $myline = fgets($myfile);
   if (strpos($myline, "CliqrDependencies")) {
     $pos = strpos($myline, "=");
-    $dbhost = substr($myline,$pos+2,-1);
+    $dbhost = substr($myline,$pos+2,-2);
     echo "DEBUG: DB host is: ".$dbhost."</br>";
   }
   if (strpos($myline, "CliqrTier_".$dbhost."_PUBLIC_IP")) {
     $pos = strpos($myline, "=");
-    $dbip = substr($myline,$pos+2,-1);
+    $dbip = substr($myline,$pos+2,-2);
     echo "DEBUG: DB IP is: ".$dbip."</br>";
   }
 }
