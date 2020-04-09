@@ -29,8 +29,8 @@ while(!feof($myfile)) {
 fclose($myfile);
   
 $username = "admin";
-$password = "password";
-$dbname = "myDB";
+$password = "S3cur1ty01";
+$dbname = "simpleAppDB";
 
 // Create connection
 $conn = new mysqli($dbip, $username, $password, $dbname);
@@ -39,14 +39,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, firstname, lastname FROM MyGuests";
+$sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     echo "<table><tr><th>ID</th><th>Name</th></tr>";
     // output data of each row
     while($row = $result->fetch_assoc()) {
-        echo "<tr><td>" . $row["id"]. "</td><td>" . $row["firstname"]. " " . $row["lastname"]. "</td></tr>";
+        echo "<tr><td>" . $row["id"]. "</td><td>" . $row["first_name"]. " " . $row["last_name"]. "</td></tr>";
     }
     echo "</table>";
 } else {
