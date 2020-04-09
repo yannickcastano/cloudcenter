@@ -12,7 +12,7 @@ table, th, td {
 <?php
 echo "My simple App</br>";
 //Open userenv file and search for DB IP address
-$myfile = fopen("/usr/local/osmosix/etc/uservenv", "r") or die("Unable to open file!");
+$myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
 while(!feof($myfile)) {
   $myline = fgets($myfile);
   if (strpos($myline, "CliqrDependencies")) {
