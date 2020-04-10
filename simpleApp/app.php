@@ -8,9 +8,9 @@ table, th, td {
 </style>
 </head>
 <body>
-
+<title>My simple App</title>
 <?php
-echo "My simple App</br></br>";
+echo "<h1>My simple App</h1></br></br>";
 //Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
 while(!feof($myfile)) {
