@@ -10,7 +10,7 @@ table, th, td {
 <body>
 <title>My simple App</title>
 <?php
-echo "<h1>My simple App</h1></br></br>";
+echo "<h1>My simple App</h1>";
 //Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
 while(!feof($myfile)) {
