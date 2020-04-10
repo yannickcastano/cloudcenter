@@ -11,7 +11,7 @@ table, th, td {
 
 <?php
 echo "My simple App</br>";
-//Open userenv file and search for DB IP address
+//Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
 while(!feof($myfile)) {
   $myline = fgets($myfile);
@@ -19,6 +19,12 @@ while(!feof($myfile)) {
     $pos = strpos($myline, "=");
     $dbhost = substr($myline,$pos+2,-2);
   }
+}
+fclose($myfile);
+//Open userenv file and search for DB IP address
+$myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
+while(!feof($myfile)) {
+  $myline = fgets($myfile);
   if (strpos($myline, "CliqrTier_".$dbhost."_PUBLIC_IP")) {
     $pos = strpos($myline, "=");
     $dbip = substr($myline,$pos+2,-2);
