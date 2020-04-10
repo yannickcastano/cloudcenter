@@ -3,14 +3,14 @@
 <head>
 <style>
 table, th, td {
-    border: 1px solid black;
+    border: 1px solid grey;
 }
 </style>
 </head>
 <body>
 
 <?php
-echo "My simple App</br>";
+echo "My simple App</br></br>";
 //Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
 while(!feof($myfile)) {
@@ -31,21 +31,20 @@ while(!feof($myfile)) {
   }
 }
 fclose($myfile);
-  
+// MySQL connection
 $username = "admin";
 $password = "S3cur1ty01";
 $dbname = "simpleAppDB";
-
-// Create connection
 $conn = new mysqli($dbip, $username, $password, $dbname);
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+echo "Connection to Database IP ".$dbip." successul</br>";
+// Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
-
+echo "People in our Database are: </br>";
 if ($result->num_rows > 0) {
     echo "<table><tr><th>ID</th><th>Name</th></tr>";
     // output data of each row
@@ -54,9 +53,9 @@ if ($result->num_rows > 0) {
     }
     echo "</table>";
 } else {
-    echo "0 results";
+    echo "No data found";
 }
-
+// Close SQL connection
 $conn->close();
 ?> 
 
