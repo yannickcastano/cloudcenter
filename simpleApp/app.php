@@ -21,8 +21,8 @@ function extract_userenv($to_find) {
   }
   return $found;
 }
-$tierOrder = extract_userenv ('tierOrder');
-echo 'DEBUG - tierOrder: '.$tierOrder;
+$tierOrder = extract_userenv('CliqrDependencies');
+echo 'DEBUG - CliqrDependencies: '.$tierOrder;
 echo "<h1>My simple App</h1>";
 //Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
