@@ -52,20 +52,7 @@ function strpos_occurrence(string $to_search_in, string $to_find, int $occurrenc
   }
   return false;
 }
-//Get, write and read ACI authentication token. Thanks to Sharontools
-function save_token($token){
-  global $aci_token_file_path;
-  $token_file = fopen($aci_token_file_path, "w");
-  fwrite($token_file, $token);
-  fclose($token_file);
-}
-function read_token(){
-  global $aci_token_file_path;
-  $token_file = fopen($aci_token_file_path, "r");
-  $token = fread($token_file,filesize($token_file_path));
-  fclose($token_file);
-  return $token;
-}
+//Connect to ACI to get authentication token.
 function aci_connect(){
   global $aci_apic_ip, $aci_apic_user, $aci_apic_password, $aci_token;
   $url = "https://".$aci_apic_ip."/api/aaaLogin.json";
@@ -85,13 +72,11 @@ function aci_connect(){
   curl_close($request);
   $result = json_decode($result_json,true);
   $aci_token = $result["imdata"][0]["aaaLogin"]["attributes"]["token"];
-  //save_token($token);
 }
-//Get ACI resources. Thanks to Sharontools
+//Get ACI resources.
 function aci_get($uri){
   global $aci_apic_ip, $aci_token;
   $url = "https://".$aci_apic_ip.":443/api/".$uri;
-  //$token = read_token();
   $request = curl_init($url);                                                                      
   curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
   curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
@@ -141,7 +126,7 @@ if ($aci_tenant) {
   echo '</br>Database EPG: '.$aci_db_epg;
   aci_connect();
   $app_mac = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,'.$app_ip.')');
-  echo 'DEBUG - App MAC: '.$app_mac;
+  echo '</br>DEBUG - App MAC: '.array_values($app_mac);
 }
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
