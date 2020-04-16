@@ -68,9 +68,7 @@ function read_token(){
 function aci_connect(){
   global $aci_apic_ip, $aci_apic_user, $aci_apic_password;
   $url = "https://".$aci_apic_ip."/api/aaaLogin.json";
-  echo '</br>DEBUG - connect URL: '.$url;
   $data = '{"aaaUser":{"attributes":{"name":"'.$aci_apic_user.'","pwd":"'.$aci_apic_password.'"}}}';
-  echo '</br>DEBUG - connect data: '.$data;
   $request = curl_init($url);
   curl_setopt($request, CURLOPT_POST, 1);
   curl_setopt($request, CURLOPT_POSTFIELDS, $data);
@@ -79,14 +77,12 @@ function aci_connect(){
   curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, FALSE);
   curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
   curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-  echo '</br>DEBUG - connect request: '.$request;
   $result_json = curl_exec($request);
   if(curl_errno($request)){
     die('</br>Error connecting to ACI. Curl error: '.curl_error($request));
   }
   curl_close($request);
   $result = json_decode($result_json,true);
-  echo '</br>DEBUG - connect result: '.$result;
   $token = $result["imdata"][0]["aaaLogin"]["attributes"]["token"];
   save_token($token);
 }
@@ -98,8 +94,9 @@ function aci_get($uri){
   $request = curl_init($url);                                                                      
   curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
   curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
-  curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, 0);
+  curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($request, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, FALSE);
   curl_setopt($request, CURLOPT_COOKIE, "APIC-cookie=$token");
   $result_json = curl_exec($request);
   $result = json_decode($result_json,true);
