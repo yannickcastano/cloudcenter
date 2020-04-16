@@ -10,6 +10,19 @@ table, th, td {
 <body>
 <title>My simple App</title>
 <?php
+function extract_userenv($to_find) {
+  $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
+  while(!feof($myfile)) {
+    $myline = fgets($myfile);
+    if (strpos($myline, $to_find)) {
+      $pos = strpos($myline, "=");
+      $found = substr($myline,$pos+2,-2);
+    }
+  }
+  return $found;
+}
+exec('source /usr/local/osmosix/etc/userenv');
+echo 'tierOrder: '.getenv('tierOrder');
 echo "<h1>My simple App</h1>";
 //Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
