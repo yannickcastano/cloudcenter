@@ -68,6 +68,7 @@ function read_token(){
 function aci_connect(){
   global $aci_apic_ip, $aci_apic_user, $aci_apic_password;
   $url = "https://".$aci_apic_ip.":443/api/aaaLogin.json";
+  echo '</br>DEBUG - connect URL: '.$url;
   $data = '{
       "aaaUser":{
         "attributes":{
@@ -82,12 +83,14 @@ function aci_connect(){
   curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
   curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
   curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+  echo '</br>DEBUG - connect request: '.$request;
   $result_json = curl_exec($request);
   if(curl_errno($request)){
     die('Error connecting to ACI. Curl error: '.curl_error($request));
   }
   curl_close($request);
   $result = json_decode($result_json,true);
+  echo '</br>DEBUG - connect result: '.$result;
   $token = $result["imdata"][0]["aaaLogin"]["attributes"]["token"];
   save_token($token);
 }
