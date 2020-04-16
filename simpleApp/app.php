@@ -22,7 +22,7 @@ function extract_userenv($to_find) {
   return $found;
 }
 exec('source /usr/local/osmosix/etc/userenv');
-echo 'tierOrder: '.getenv('tierOrder');
+echo 'DEBUG - tierOrder: '.getenv('tierOrder');
 echo "<h1>My simple App</h1>";
 //Open userenv file and search for DB host
 $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
