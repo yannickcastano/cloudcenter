@@ -59,7 +59,7 @@ $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
 echo "</br>People in our Database are: </br>";
 if ($result->num_rows > 0) {
-    echo "<table><tr><th>ID</th><th>Name</th></tr>";
+    echo '<table class="tg"><tr><th>ID</th><th>Name</th></tr>';
     // output data of each row
     while($row = $result->fetch_assoc()) {
         echo "<tr><td>" . $row["id"]. "</td><td>" . $row["first_name"]. " " . $row["last_name"]. "</td></tr>";
