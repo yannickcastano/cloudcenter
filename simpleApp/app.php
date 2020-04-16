@@ -51,13 +51,14 @@ if ($conn->connect_error) {
   echo "<td>MySQL connection failed".$conn->connect_error."</td>";
   die("MySQL connection failed: ".$conn->connect_error);
 }
-echo "<td>MySQL connection successful</td>";
+echo '<td><svg height="60" width="200"><polygon points="0,20 150,20 150,10 180,30 150,50 150,40 0,40" style="fill:green" /></svg>';
+echo "</br>MySQL connection successful</td>";
 //DB server part
 echo '<td class="tg-0lax">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
 //Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
-echo "</br>People in our Database are: </br>";
+echo "</br></br>People in our Database are: </br>";
 if ($result->num_rows > 0) {
     echo '<ul style="list-style-type:circle;">';
     // output data of each row
