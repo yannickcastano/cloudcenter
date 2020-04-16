@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
 <style>
 table, th, td {
     border: 1px solid grey;
@@ -36,9 +42,9 @@ $mysql_db_name = "simpleAppDB";
 $aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
 echo "<h1>".$app_name."</h1>";
-echo "<table><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>";
+echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
 //App server part
-echo "<tr><td>Name: ".$app_host."</br>Hostname: ".$app_hostname."</br> IP: ".$app_ip."</td>";
+echo '<tr><td class="tg-0lax">Name: '.$app_host.'</br>Hostname: '.$app_hostname.'</br> IP: '.$app_ip.'</td>';
 //MySQL connection
 $conn = new mysqli($db_ip, $mysql_username, $mysql_password, $mysql_db_name);
 if ($conn->connect_error) {
@@ -47,7 +53,7 @@ if ($conn->connect_error) {
 }
 echo "<td>MySQL connection successful</td>";
 //DB server part
-echo "<td>Name: ".$db_host."</br>Hostname: ".$db_hostname."</br> IP: ".$db_ip;
+echo '<td class="tg-0lax">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
 //Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
