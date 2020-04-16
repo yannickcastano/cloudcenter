@@ -11,6 +11,24 @@
 </head>
 <body>
 <?php
+//########################################### Variables ###########################################
+$app_name = extract_userenv('cliqrAppName');
+$app_host = extract_userenv('cliqrAppTierName');
+$app_ip = extract_userenv('CliqrTier_'.$app_host.'_PUBLIC_IP');
+$app_hostname = extract_userenv('CliqrTier_'.$app_host.'_HOSTNAME');
+$db_host = extract_userenv('CliqrDependencies');
+$db_ip = extract_userenv('CliqrTier_'.$db_host.'_PUBLIC_IP');
+$db_hostname = extract_userenv('CliqrTier_'.$db_host.'_HOSTNAME');
+$mysql_username = "admin";
+$mysql_password = "S3cur1ty01";
+$mysql_db_name = "simpleAppDB";
+$aci_apic_ip = "10.60.9.225";
+$aci_apic_user = "cloudcenter";
+$aci_apic_password = '$ecurity01';
+$aci_token_file_path = "/temp/token.txt";
+$aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
+
+//############################################# Functions #########################################
 //Open Cloudcenter userenv file and search for a value
 function extract_userenv(string $to_find) {
   $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
@@ -24,6 +42,7 @@ function extract_userenv(string $to_find) {
   fclose($myfile);
   return $found;
 }
+//Find the Nth occurence position in a string
 function strpos_occurrence(string $to_search_in, string $to_find, int $occurrence, int $offset = null) {
   if((0 < $occurrence) && ($length = strlen($to_find))) {
       do {
@@ -32,21 +51,69 @@ function strpos_occurrence(string $to_search_in, string $to_find, int $occurrenc
   }
   return false;
 }
-$app_name = extract_userenv('cliqrAppName');
-$app_host = extract_userenv('cliqrAppTierName');
-$app_ip = extract_userenv('CliqrTier_'.$app_host.'_PUBLIC_IP');
-$app_hostname = extract_userenv('CliqrTier_'.$app_host.'_HOSTNAME');
-$db_host = extract_userenv('CliqrDependencies');
-$db_ip = extract_userenv('CliqrTier_'.$db_host.'_PUBLIC_IP');
-$db_hostname = extract_userenv('CliqrTier_'.$db_host.'_HOSTNAME');
-$mysql_username = "admin";
-$mysql_password = "S3cur1ty01";
-$mysql_db_name = "simpleAppDB";
-$aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
+//Get, write and read ACI authentication token. Thanks to Sharontools
+function save_token($token){
+  global $aci_token_file_path;
+  $token_file = fopen($aci_token_file_path, "w");
+  fwrite($token_file, $token);
+  fclose($token_file);
+}
+function read_token(){
+  global $aci_token_file_path;
+  $token_file = fopen($aci_token_file_path, "r");
+  $token = fread($token_file,filesize($token_file_path));
+  fclose($token_file);
+  return $token;
+}
+function aci_connect(){
+  global $aci_apic_ip, $aci_apic_user, $aci_apic_password;
+  $url = "https://".$aci_apic_ip.":443/api/aaaLogin.json";
+  $data = '{
+      "aaaUser":{
+        "attributes":{
+          "name":"'.$aci_apic_user.'",
+          "pwd":"'.$aci_apic_password.'"
+        }
+      }
+    }';
+  $request = curl_init($url);
+  curl_setopt($request, CURLOPT_POST, 1);
+  curl_setopt($request, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+  curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+  $result_json = curl_exec($request);
+  if(curl_errno($request)){
+    die('Error connecting to ACI. Curl error: '.curl_error($request));
+  }
+  curl_close($request);
+  $result = json_decode($result_json,true);
+  $token = $result["imdata"][0]["aaaLogin"]["attributes"]["token"];
+  save_token($token);
+}
+//Get ACI resources. Thanks to Sharontools
+function aci_get($uri){
+  global $aci_apic_ip;
+  $url = "https://".$aci_apic_ip.":443/api/".$uri;
+  $token = read_token();
+  $request = curl_init($url);                                                                      
+  curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
+  curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
+  curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($request, CURLOPT_COOKIE, "APIC-cookie=$token");
+  $result_json = curl_exec($request);
+  $result = json_decode($result_json,true);
+  if(curl_errno($request)){
+    die('Error connecting to ACI. Curl error: '.curl_error($request));
+  }
+  curl_close($request);
+  return $result;
+}
 
+//############################################ Main code ##########################################
 echo '<title>'.$app_name.'</title>';
 echo '<h1>'.$app_name.'</h1>';
-//#################################### Topology information display #################################
+//////////////////////////////////// Topology information display /////////////////////////////////
 echo '<h2>Topology</h2>';
 echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
 //------------------------------------ App server part
@@ -63,7 +130,7 @@ echo "</br>MySQL connection successful</td>";
 echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
 echo "</td></tr>";
 echo "</table>";
-//#################################### ACI information display ######################################
+////////////////////////////////////// ACI information display ////////////////////////////////////
 if ($aci_tenant) {
   echo '<h2>ACI informations</h2>';
   $temp = extract_userenv('CliqrTier_'.$db_host.'_Cloud_Setting_AciPortGroup_1');
@@ -74,8 +141,11 @@ if ($aci_tenant) {
   echo 'Tenant: '.$aci_tenant;
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
+  aci_connect();
+  $app_mac = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,'.$app_ip.')');
+  echo 'DEBUG - App MAC: '.$app_mac;
 }
-//#################################### Database information display #################################
+//////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
 //Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
