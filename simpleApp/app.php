@@ -46,7 +46,7 @@ $aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
 echo '<title>'.$app_name.'</title>';
 echo '<h1>'.$app_name.'</h1>';
-//#################################### Topology information display
+//#################################### Topology information display #################################
 echo '<h2>Topology</h2>';
 echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
 //------------------------------------ App server part
@@ -63,7 +63,7 @@ echo "</br>MySQL connection successful</td>";
 echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
 echo "</td></tr>";
 echo "</table>";
-//#################################### ACI information display
+//#################################### ACI information display ######################################
 if ($aci_tenant) {
   echo '<h2>ACI informations</h2>';
   $temp = extract_userenv('CliqrTier_'.$db_host.'_Cloud_Setting_AciPortGroup_1');
@@ -74,7 +74,7 @@ if ($aci_tenant) {
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
 }
-//#################################### Database information display
+//#################################### Database information display #################################
 echo '<h2>Database</h2>';
 //Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
