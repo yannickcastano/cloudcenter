@@ -74,8 +74,9 @@ function aci_connect(){
   $request = curl_init($url);
   curl_setopt($request, CURLOPT_POST, 1);
   curl_setopt($request, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, 0);
+  curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($request, CURLOPT_SSL_VERIFYHOST, 0);
+  curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, FALSE);
   curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
   curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
   echo '</br>DEBUG - connect request: '.$request;
