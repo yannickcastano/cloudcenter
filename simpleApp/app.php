@@ -24,7 +24,7 @@ $mysql_password = "S3cur1ty01";
 $mysql_db_name = "simpleAppDB";
 $aci_apic_ip = "10.60.9.225";
 $aci_apic_user = "admin";
-$aci_apic_password = 'cisco123';
+$aci_apic_password = "cisco123";
 $aci_token_file_path = "/temp/token.txt";
 $aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
@@ -67,7 +67,7 @@ function read_token(){
 }
 function aci_connect(){
   global $aci_apic_ip, $aci_apic_user, $aci_apic_password;
-  $url = "https://".$aci_apic_ip.":443/api/aaaLogin.json";
+  $url = "https://".$aci_apic_ip."/api/aaaLogin.json";
   echo '</br>DEBUG - connect URL: '.$url;
   $data = '{
       "aaaUser":{
@@ -77,6 +77,7 @@ function aci_connect(){
         }
       }
     }';
+  echo '</br>DEBUG - connect data: '.$data;
   $request = curl_init($url);
   curl_setopt($request, CURLOPT_POST, 1);
   curl_setopt($request, CURLOPT_POSTFIELDS, $data);
