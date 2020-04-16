@@ -10,6 +10,7 @@ table, th, td {
 <body>
 <title>My simple App</title>
 <?php
+//Open Cloudcenter userenv file and search for a value
 function extract_userenv($to_find) {
   $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
   while(!feof($myfile)) {
@@ -19,31 +20,14 @@ function extract_userenv($to_find) {
       $found = substr($myline,$pos+2,-2);
     }
   }
+  fclose($myfile);
   return $found;
 }
-$tierOrder = extract_userenv('CliqrDependencies');
-echo 'DEBUG - CliqrDependencies: '.$tierOrder;
-echo "<h1>My simple App</h1>";
-//Open userenv file and search for DB host
-$myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
-while(!feof($myfile)) {
-  $myline = fgets($myfile);
-  if (strpos($myline, "CliqrDependencies")) {
-    $pos = strpos($myline, "=");
-    $dbhost = substr($myline,$pos+2,-2);
-  }
-}
-fclose($myfile);
-//Open userenv file and search for DB IP address
-$myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
-while(!feof($myfile)) {
-  $myline = fgets($myfile);
-  if (strpos($myline, "CliqrTier_".$dbhost."_PUBLIC_IP")) {
-    $pos = strpos($myline, "=");
-    $dbip = substr($myline,$pos+2,-2);
-  }
-}
-fclose($myfile);
+$appName = extract_userenv('CliqrAppName');
+$dbhost = extract_userenv('CliqrDependencies');
+$dbip = extract_userenv('CliqrTier_'.$dbhost.'_PUBLIC_IP');
+
+echo "<h1>".$aapName."</h1>";
 // MySQL connection
 $username = "admin";
 $password = "S3cur1ty01";
