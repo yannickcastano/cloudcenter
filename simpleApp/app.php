@@ -47,7 +47,7 @@ if ($conn->connect_error) {
   echo "<td>MySQL connection failed".$conn->connect_error."</td>";
   die("MySQL connection failed: ".$conn->connect_error);
 }
-echo '<td class="tg-1"><svg height="60" width="200"><polygon points="0,20 150,20 150,10 180,30 150,50 150,40 0,40" style="fill:green" /></svg>';
+echo '<td class="tg-1"><svg height="60" width="180"><polygon points="0,20 150,20 150,10 180,30 150,50 150,40 0,40" style="fill:green" /></svg>';
 echo "</br>MySQL connection successful</td>";
 //DB server part
 echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
