@@ -64,14 +64,13 @@ echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP
 echo "</td></tr>";
 echo "</table>";
 //#################################### ACI information display
-echo 'DEBUG - ACI tenant :'.$aci_tenant;
 if ($aci_tenant) {
   echo '<h2>ACI informations</h2>';
   $temp = extract_userenv('CliqrTier_'.$db_host.'_Cloud_Setting_AciPortGroup_1');
   $pos_1 = strpos_occurrence($temp,'|',1);
   $pos_2 = strpos_occurrence($temp,'|',2);
-  $aci_db_epg = substr($temp,$pos_2+1,-2);
-  $aci_app_profile = substr($temp,$pos_1+1,$pos_2-1);
+  $aci_db_epg = substr($temp,$pos_2+1);
+  $aci_app_profile = substr($temp,$pos_1+1,$pos_2-$pos_1);
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
 }
