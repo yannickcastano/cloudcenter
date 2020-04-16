@@ -23,8 +23,8 @@ $mysql_username = "admin";
 $mysql_password = "S3cur1ty01";
 $mysql_db_name = "simpleAppDB";
 $aci_apic_ip = "10.60.9.225";
-$aci_apic_user = "cloudcenter";
-$aci_apic_password = '$ecurity01';
+$aci_apic_user = "admin";
+$aci_apic_password = 'cisco123';
 $aci_token_file_path = "/temp/token.txt";
 $aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
