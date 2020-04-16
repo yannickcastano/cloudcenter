@@ -75,12 +75,13 @@ function aci_connect(){
   curl_setopt($request, CURLOPT_POST, 1);
   curl_setopt($request, CURLOPT_POSTFIELDS, $data);
   curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, 0);
   curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
   curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
   echo '</br>DEBUG - connect request: '.$request;
   $result_json = curl_exec($request);
   if(curl_errno($request)){
-    die('Error connecting to ACI. Curl error: '.curl_error($request));
+    die('</br>Error connecting to ACI. Curl error: '.curl_error($request));
   }
   curl_close($request);
   $result = json_decode($result_json,true);
@@ -97,11 +98,12 @@ function aci_get($uri){
   curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
   curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
   curl_setopt($request, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, 0);
   curl_setopt($request, CURLOPT_COOKIE, "APIC-cookie=$token");
   $result_json = curl_exec($request);
   $result = json_decode($result_json,true);
   if(curl_errno($request)){
-    die('Error connecting to ACI. Curl error: '.curl_error($request));
+    die('</br>Error connecting to ACI. Curl error: '.curl_error($request));
   }
   curl_close($request);
   return $result;
