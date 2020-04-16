@@ -25,6 +25,7 @@ $mysql_db_name = "simpleAppDB";
 $aci_apic_ip = "10.60.9.225";
 $aci_apic_user = "admin";
 $aci_apic_password = "cisco123";
+$aci_token = "";
 $aci_token_file_path = "/temp/token.txt";
 $aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
@@ -66,7 +67,7 @@ function read_token(){
   return $token;
 }
 function aci_connect(){
-  global $aci_apic_ip, $aci_apic_user, $aci_apic_password;
+  global $aci_apic_ip, $aci_apic_user, $aci_apic_password, $aci_token;
   $url = "https://".$aci_apic_ip."/api/aaaLogin.json";
   $data = '{"aaaUser":{"attributes":{"name":"'.$aci_apic_user.'","pwd":"'.$aci_apic_password.'"}}}';
   $request = curl_init($url);
@@ -83,21 +84,21 @@ function aci_connect(){
   }
   curl_close($request);
   $result = json_decode($result_json,true);
-  $token = $result["imdata"][0]["aaaLogin"]["attributes"]["token"];
-  save_token($token);
+  $aci_token = $result["imdata"][0]["aaaLogin"]["attributes"]["token"];
+  //save_token($token);
 }
 //Get ACI resources. Thanks to Sharontools
 function aci_get($uri){
-  global $aci_apic_ip;
+  global $aci_apic_ip, $aci_token;
   $url = "https://".$aci_apic_ip.":443/api/".$uri;
-  $token = read_token();
+  //$token = read_token();
   $request = curl_init($url);                                                                      
   curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
   curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
   curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
   curl_setopt($request, CURLOPT_SSL_VERIFYHOST, 0);
   curl_setopt($request, CURLOPT_SSL_VERIFYSTATUS, FALSE);
-  curl_setopt($request, CURLOPT_COOKIE, "APIC-cookie=$token");
+  curl_setopt($request, CURLOPT_COOKIE, "APIC-cookie=$aci_token");
   $result_json = curl_exec($request);
   $result = json_decode($result_json,true);
   if(curl_errno($request)){
