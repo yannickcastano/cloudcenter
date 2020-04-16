@@ -70,7 +70,8 @@ if ($aci_tenant) {
   $pos_1 = strpos_occurrence($temp,'|',1);
   $pos_2 = strpos_occurrence($temp,'|',2);
   $aci_db_epg = substr($temp,$pos_2+1);
-  $aci_app_profile = substr($temp,$pos_1+1,$pos_2-$pos_1);
+  $aci_app_profile = substr($temp,$pos_1+1,$pos_2-$pos_1-1);
+  echo 'Tenant: '.$aci_tenant;
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
 }
@@ -79,7 +80,7 @@ echo '<h2>Database</h2>';
 //Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
-echo "</br>People in our Database are: </br>";
+echo "People in our Database are: </br>";
 if ($result->num_rows > 0) {
     echo '<ul style="list-style-type:circle;">';
     // output data of each row
