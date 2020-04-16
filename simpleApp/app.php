@@ -64,7 +64,7 @@ echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP
 echo "</td></tr>";
 echo "</table>";
 //#################################### ACI information display
-echo 'DEBUG'.$aci_tenant;
+echo 'DEBUG - ACI tenant :'.$aci_tenant;
 if ($aci_tenant) {
   echo '<h2>ACI informations</h2>';
   $temp = extract_userenv('CliqrTier_'.$db_host.'_Cloud_Setting_AciPortGroup_1');
