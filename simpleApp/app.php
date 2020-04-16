@@ -69,14 +69,7 @@ function aci_connect(){
   global $aci_apic_ip, $aci_apic_user, $aci_apic_password;
   $url = "https://".$aci_apic_ip."/api/aaaLogin.json";
   echo '</br>DEBUG - connect URL: '.$url;
-  $data = '{
-      "aaaUser":{
-        "attributes":{
-          "name":"'.$aci_apic_user.'",
-          "pwd":"'.$aci_apic_password.'"
-        }
-      }
-    }';
+  $data = '{"aaaUser":{"attributes":{"name":"'.$aci_apic_user.'","pwd":"'.$aci_apic_password.'"}}}';
   echo '</br>DEBUG - connect data: '.$data;
   $request = curl_init($url);
   curl_setopt($request, CURLOPT_POST, 1);
