@@ -38,10 +38,12 @@ $aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
 echo '<title>'.$app_name.'</title>';
 echo '<h1>'.$app_name.'</h1>';
+//#################################### Topology information display
+echo '<h2>Topology</h2>';
 echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
-//App server part
+//------------------------------------ App server part
 echo '<tr><td class="tg-0">Name: '.$app_host.'</br>Hostname: '.$app_hostname.'</br> IP: '.$app_ip.'</td>';
-//MySQL connection
+//------------------------------------ MySQL connection part
 $conn = new mysqli($db_ip, $mysql_username, $mysql_password, $mysql_db_name);
 if ($conn->connect_error) {
   echo "<td>MySQL connection failed".$conn->connect_error."</td>";
@@ -49,12 +51,16 @@ if ($conn->connect_error) {
 }
 echo '<td class="tg-1"><svg height="60" width="180"><polygon points="0,20 150,20 150,10 180,30 150,50 150,40 0,40" style="fill:green" /></svg>';
 echo "</br>MySQL connection successful</td>";
-//DB server part
+//------------------------------------ DB server part
 echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
+echo "</td></tr>";
+echo "</table>";
+//#################################### Database information display
+echo '<h2>Database</h2>';
 //Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
-echo "</br></br>People in our Database are: </br>";
+echo "</br>People in our Database are: </br>";
 if ($result->num_rows > 0) {
     echo '<ul style="list-style-type:circle;">';
     // output data of each row
@@ -65,10 +71,8 @@ if ($result->num_rows > 0) {
 } else {
     echo "No data found";
 }
-echo "</td></tr>";
 // Close SQL connection
 $conn->close();
-echo "</table>";
 ?> 
 
 </body>
