@@ -23,25 +23,35 @@ function extract_userenv($to_find) {
   fclose($myfile);
   return $found;
 }
-$appName = extract_userenv('CliqrAppName');
-$dbhost = extract_userenv('CliqrDependencies');
-$dbip = extract_userenv('CliqrTier_'.$dbhost.'_PUBLIC_IP');
+$app_name = extract_userenv('CliqrAppName');
+$app_host = extract_userenv('cliqrAppTierName');
+$app_ip = extract_userenv('CliqrTier_'.$app_host.'_PUBLIC_IP');
+$app_hostname = extract_userenv('CliqrTier_'.$app_host.'_HOSTNAME');
+$db_host = extract_userenv('CliqrDependencies');
+$db_ip = extract_userenv('CliqrTier_'.$db_host.'_PUBLIC_IP');
+$db_hostname = extract_userenv('CliqrTier_'.$db_host.'_HOSTNAME');
+$mysql_username = "admin";
+$mysql_password = "S3cur1ty01";
+$mysql_db_name = "simpleAppDB";
+$aci_tenant = extract_userenv('Cloud_Setting_AciTenantName');
 
-echo "<h1>".$aapName."</h1>";
-// MySQL connection
-$username = "admin";
-$password = "S3cur1ty01";
-$dbname = "simpleAppDB";
-$conn = new mysqli($dbip, $username, $password, $dbname);
-// Check connection
+echo "<h1>".$app_name."</h1>";
+echo "<table><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>";
+//App server part
+echo "<tr><td>Name: ".$app_host."</br>Hostname: ".$app_hostname."</br> IP: ".$app_ip."</td>";
+//MySQL connection
+$conn = new mysqli($db_ip, $mysql_username, $mysql_password, $mysql_db_name);
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  echo "<td>MySQL connection failed".$conn->connect_error."</td>";
+  die("MySQL connection failed: ".$conn->connect_error);
 }
-echo "Connection to Database IP ".$dbip." successul</br>";
-// Get and display the content of 'people' table
+echo "<td>MySQL connection successful</td>";
+//DB server part
+echo "<td>Name: ".$db_host."</br>Hostname: ".$db_hostname."</br> IP: ".$db_ip;
+//Get and display the content of 'people' table
 $sql = "SELECT id, first_name, last_name FROM people";
 $result = $conn->query($sql);
-echo "People in our Database are: </br>";
+echo "</br>People in our Database are: </br>";
 if ($result->num_rows > 0) {
     echo "<table><tr><th>ID</th><th>Name</th></tr>";
     // output data of each row
@@ -52,8 +62,10 @@ if ($result->num_rows > 0) {
 } else {
     echo "No data found";
 }
+echo "</td></tr>";
 // Close SQL connection
 $conn->close();
+echo "</table>";
 ?> 
 
 </body>
