@@ -12,7 +12,7 @@
 <body>
 <?php
 //Open Cloudcenter userenv file and search for a value
-function extract_userenv($to_find) {
+function extract_userenv(string $to_find) {
   $myfile = fopen("/usr/local/osmosix/etc/userenv", "r") or die("Unable to open file!");
   while(!feof($myfile)) {
     $myline = fgets($myfile);
@@ -23,6 +23,14 @@ function extract_userenv($to_find) {
   }
   fclose($myfile);
   return $found;
+}
+function strpos_occurrence(string $to_search_in, string $to_find, int $occurrence, int $offset = null) {
+  if((0 < $occurrence) && ($length = strlen($to_find))) {
+      do {
+      } while ((false !== $offset = strpos($to_search_in, $to_find, $offset)) && --$occurrence && ($offset += $length));
+      return $offset;
+  }
+  return false;
 }
 $app_name = extract_userenv('cliqrAppName');
 $app_host = extract_userenv('cliqrAppTierName');
@@ -55,6 +63,17 @@ echo "</br>MySQL connection successful</td>";
 echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
 echo "</td></tr>";
 echo "</table>";
+//#################################### ACI information display
+if ($aci_tenant) {
+  echo '<h2>ACI informations</h2>';
+  $temp = extract_userenv('CliqrTier_'.$db_host.'_Cloud_Setting_AciPortGroup_1');
+  $pos_1 = strpos_occurrence($temp,'|',1);
+  $pos_2 = strpos_occurrence($temp,'|',2);
+  $aci_db_epg = substr($temp,$pos_2+1,-2);
+  $aci_app_profile = substr($temp,$pos_1+1,$pos_2-1);
+  echo '</br>Application profile: '.$aci_app_profile;
+  echo '</br>Database EPG: '.$aci_db_epg;
+}
 //#################################### Database information display
 echo '<h2>Database</h2>';
 //Get and display the content of 'people' table
