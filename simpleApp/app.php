@@ -52,6 +52,15 @@ function strpos_occurrence(string $to_search_in, string $to_find, int $occurrenc
   }
   return false;
 }
+//Extract a substring between 2 strings
+function get_string_between($string, $start, $end){
+  $string = ' ' . $string;
+  $ini = strpos($string, $start);
+  if ($ini == 0) return '';
+  $ini += strlen($start);
+  $len = strpos($string, $end, $ini) - $ini;
+  return substr($string, $ini, $len);
+}
 //Connect to ACI to get authentication token.
 function aci_connect(){
   global $aci_apic_ip, $aci_apic_user, $aci_apic_password, $aci_token;
@@ -102,31 +111,44 @@ function aci_endpoint_extract($endpoint_ip){
     case 1:
       $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
       $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
+      $endpoint_tenant = get_string_between($endpoint_dn,'/tn-','/ap-');
+      $endpoint_ap = get_string_between($endpoint_dn,'/ap-','/epg-');
+      $endpoint_epg = get_string_between($endpoint_dn,'/epg-','/cep-');
       $endpoint_vlan = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["encap"];
       $endpoint_vm_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsToVm');
       $endpoint_vm_dn = $endpoint_vm_info["imdata"][0]["fvRsToVm"]["attributes"]["tDn"];
       $endpoint_vm_data = aci_get('node/class/compVm.json?query-target-filter=eq(compVm.dn,"'.$endpoint_vm_dn.'")');
-      //$endpoint_vm_name = $endpoint_vm_data
-      //$endpoint_vm_state = $endpoint_vm_data
+      $endpoint_vm_name = $endpoint_vm_data["imdata"][0]["compVm"]["attributes"]["name"];
+      $endpoint_vm_os = $endpoint_vm_data["imdata"][0]["compVm"]["attributes"]["os"];
+      $endpoint_vm_state = $endpoint_vm_data["imdata"][0]["compVm"]["attributes"]["state"];
       $endpoint_host_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsHyper');
       $endpoint_host_dn = $endpoint_host_info["imdata"][0]["fvRsHyper"]["attributes"]["tDn"];
       $endpoint_host_data = aci_get('node/class/compHv.json?query-target-filter=eq(compHv.dn,"'.$endpoint_host_dn.'")');
-      //$endpoint_host_name = $endpoint_host_dn
-      //$endpoint_host_state = $endpoint_host_dn
+      $endpoint_host_name = $endpoint_host_dn["imdata"][0]["compHv"]["attributes"]["name"];
+      $endpoint_host_state = $endpoint_host_dn["imdata"][0]["compHv"]["attributes"]["state"];
       $endpoint_aci_path_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsCEpToPathEp&query-target-filter=not(wcard(fvRsCEpToPathEp.dn,"__ui_"))');
       $endpoint_aci_path_dn = $endpoint_aci_path_info["imdata"][0]["fvRsCEpToPathEp"]["attributes"]["tDn"];
-      //$endpoint_aci_path_pod = $endpoint_aci_path_dn
-      //$endpoint_aci_path_leaf = $endpoint_aci_path_dn
-      //$endpoint_aci_path_port = $endpoint_aci_path_dn
-      echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
-      echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
-      echo '</br>DEBUG - Endpoint VLAN: '.$endpoint_vlan;
-      echo '</br>DEBUG - Endpoint vm_data: ';
-      print_r($endpoint_vm_data);
-      echo '</br>DEBUG - Endpoint host_data: ';
-      print_r($endpoint_host_data);
-      echo '</br>DEBUG - Endpoint aci path_dn: ';
-      print_r($endpoint_aci_path_dn);
+      $endpoint_aci_path_pod = get_string_between($endpoint_aci_path_dn,'/pod-','/paths-');
+      $endpoint_aci_path_leaf = get_string_between($endpoint_aci_path_dn,'/paths-','/pathep-');
+      $endpoint_aci_path_port = get_string_between($endpoint_aci_path_dn,'/pathep-[',']');
+      $endpoint = [
+        "mac" => $endpoint_mac,
+        "ip" => $endpoint_ip,
+        "vm_name" => $endpoint_vm_name,
+        "vm_os" => $endpoint_vm_os,
+        "vm_state" => $endpoint_vm_state,
+        "host_name" => $endpoint_host_name,
+        "host_state" => $endpoint_host_state,   
+        "aci_path_port" => $endpoint_aci_path_port,
+        "aci_path_leaf" => $endpoint_aci_path_leaf,
+        "aci_path_pod" => $endpoint_aci_path_pod,
+        "vlan" => $endpoint_vlan,
+        "epg" => $endpoint_epg,
+        "ap" => $endpoint_ap,
+        "tenant" => $endpoint_tenant,
+      ];
+      echo '</br>DEBUG - Endpoint : ';
+      print_r($endpoint);
       break;
     default:
       echo '</br>ERROR - IP endpoint found multiple times in ACI';
@@ -164,7 +186,7 @@ if ($aci_tenant) {
   aci_connect();
   aci_endpoint_extract($app_ip);
   aci_endpoint_extract($db_ip);
-  echo 'Tenant: '.$aci_tenant;
+  echo '</br>Tenant: '.$aci_tenant;
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
 }
