@@ -97,8 +97,10 @@ function aci_endpoint_extract($endpoint_ip){
   $endpoint_info = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,"'.$endpoint_ip.'")');
   echo '</br>DEBUG - Endpoint info: ';
   print_r($endpoint_info);
-  $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["annotation"]["childAction"]["contName"]["dn"];
+  $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
+  $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
   echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
+  echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
 
 }
 
