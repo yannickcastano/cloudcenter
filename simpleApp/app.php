@@ -95,8 +95,6 @@ function aci_get($uri){
 //Get details about endpoint using ACI REST API
 function aci_endpoint_extract($endpoint_ip){
   $endpoint_info = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,"'.$endpoint_ip.'")');
-  echo '</br>DEBUG - Endpoint info: ';
-  print_r($endpoint_info);
   switch ($endpoint_info["totalCount"]) {
     case 0:
       echo '</br>ERROR - IP endpoint not found in ACI';
@@ -105,9 +103,12 @@ function aci_endpoint_extract($endpoint_ip){
       $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
       $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
       $endpoint_vlan = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["encap"];
+      $endpoint_data = aci_get('/node/mo/'.$endpoint_dn.'.json');
       echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
       echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
       echo '</br>DEBUG - Endpoint VLAN: '.$endpoint_vlan;
+      echo '</br>DEBUG - Endpoint data: ';
+      print_r($endpoint_data);
       break;
     default:
       echo '</br>ERROR - IP endpoint found multiple times in ACI';
