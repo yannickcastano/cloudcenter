@@ -163,7 +163,7 @@ echo '<h1>'.$app_name.'</h1>';
 echo '<h2>Topology</h2>';
 echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
 //------------------------------------ App server part
-echo '<tr><td class="tg-0">Name: '.$app_host.'</br>Hostname: '.$app_hostname.'</br> IP: '.$app_ip.'</td>';
+echo '<tr><td class="tg-0">[Name]: '.$app_host.'</br>[Hostname]: '.$app_hostname.'</br>[IP]: '.$app_ip.'</td>';
 //------------------------------------ MySQL connection part
 $conn = new mysqli($db_ip, $mysql_username, $mysql_password, $mysql_db_name);
 if ($conn->connect_error) {
@@ -173,28 +173,28 @@ if ($conn->connect_error) {
 echo '<td class="tg-1"><svg height="60" width="180"><polygon points="0,20 150,20 150,10 180,30 150,50 150,40 0,40" style="fill:green" /></svg>';
 echo "</br>MySQL connection successful</td>";
 //------------------------------------ DB server part
-echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
+echo '<td class="tg-0">[Name]: '.$db_host.'</br>[Hostname]: '.$db_hostname.'</br>[IP]: '.$db_ip;
 echo "</td></tr>";
 ////////////////////////////////////// ACI information display ////////////////////////////////////
 if ($aci_tenant) {
-  echo '<tr>ACI informations</tr>';
+  echo '<tr><td>ACI informations</td></tr>';
   aci_connect();
   $app_endpoint = aci_endpoint_extract($app_ip);
   $db_endpoint = aci_endpoint_extract($db_ip);
   //------------------------------------ App server part
-  echo '<tr><td class="tg-0"><pre>';
+  echo '<tr><td class="tg-0">';
   foreach($app_endpoint as $key => $value){
-    echo '[' . $key . '] =>' . $value . PHP_EOL;
+    echo '['.$key.']: '.$value.PHP_EOL;
   }
-  echo '</pre></td>';
+  echo '</td>';
   //------------------------------------ Connection part
   echo '<td class="tg-0"></td>';
   //------------------------------------ DB server part
-  echo '<td class="tg-0"><pre>';
+  echo '<td class="tg-0">';
   foreach($db_endpoint as $key => $value){
-    echo '[' . $key . '] =>' . $value . PHP_EOL;
+    echo '['.$key.']: '.$value.PHP_EOL;
   }
-  echo '</pre></td></tr>';
+  echo '</td></tr>';
 }
 echo "</table>";
 //////////////////////////////////// Database information display /////////////////////////////////
