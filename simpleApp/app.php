@@ -126,6 +126,8 @@ function aci_endpoint_extract($endpoint_ip){
       $endpoint_host_data = aci_get('node/class/compHv.json?query-target-filter=eq(compHv.dn,"'.$endpoint_host_dn.'")');
       $endpoint_host_name = $endpoint_host_dn["imdata"][0]["compHv"]["attributes"]["name"];
       $endpoint_host_state = $endpoint_host_dn["imdata"][0]["compHv"]["attributes"]["state"];
+      echo '</br>DEBUG - Host : ';
+      var_dump($endpoint_host_dn);
       $endpoint_aci_path_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsCEpToPathEp&query-target-filter=not(wcard(fvRsCEpToPathEp.dn,"__ui_"))');
       $endpoint_aci_path_dn = $endpoint_aci_path_info["imdata"][0]["fvRsCEpToPathEp"]["attributes"]["tDn"];
       $endpoint_aci_path_pod = get_string_between($endpoint_aci_path_dn,'/pod-','/paths-');
@@ -138,7 +140,7 @@ function aci_endpoint_extract($endpoint_ip){
         "vm_os" => $endpoint_vm_os,
         "vm_state" => $endpoint_vm_state,
         "host_name" => $endpoint_host_name,
-        "host_state" => $endpoint_host_state,   
+        "host_state" => $endpoint_host_state,
         "aci_path_port" => $endpoint_aci_path_port,
         "aci_path_leaf" => $endpoint_aci_path_leaf,
         "aci_path_pod" => $endpoint_aci_path_pod,
@@ -148,7 +150,7 @@ function aci_endpoint_extract($endpoint_ip){
         "tenant" => $endpoint_tenant,
       ];
       echo '</br>DEBUG - Endpoint : ';
-      print_r($endpoint);
+      var_dump($endpoint);
       break;
     default:
       echo '</br>ERROR - IP endpoint found multiple times in ACI';
