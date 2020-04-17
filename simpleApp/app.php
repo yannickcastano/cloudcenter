@@ -127,7 +127,7 @@ function aci_endpoint_extract($endpoint_ip){
       $endpoint_host_name = $endpoint_host_dn["imdata"][0]["compHv"]["attributes"]["name"];
       $endpoint_host_state = $endpoint_host_dn["imdata"][0]["compHv"]["attributes"]["state"];
       echo '</br>DEBUG - Host : ';
-      var_dump($endpoint_host_dn);
+      var_dump($endpoint_host_data);
       $endpoint_aci_path_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsCEpToPathEp&query-target-filter=not(wcard(fvRsCEpToPathEp.dn,"__ui_"))');
       $endpoint_aci_path_dn = $endpoint_aci_path_info["imdata"][0]["fvRsCEpToPathEp"]["attributes"]["tDn"];
       $endpoint_aci_path_pod = get_string_between($endpoint_aci_path_dn,'/pod-','/paths-');
