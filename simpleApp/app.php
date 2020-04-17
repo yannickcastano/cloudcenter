@@ -77,6 +77,7 @@ function aci_connect(){
 function aci_get($uri){
   global $aci_apic_ip, $aci_token;
   $url = "https://".$aci_apic_ip.":443/api/".$uri;
+  echo '</br>DEBUG - ACI API URL: '.$url;
   $request = curl_init($url);                                                                      
   curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
   curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
