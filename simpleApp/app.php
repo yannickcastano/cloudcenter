@@ -97,11 +97,21 @@ function aci_endpoint_extract($endpoint_ip){
   $endpoint_info = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,"'.$endpoint_ip.'")');
   echo '</br>DEBUG - Endpoint info: ';
   print_r($endpoint_info);
-  $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
-  $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
-  echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
-  echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
-
+  switch ($endpoint_info["totalCount"]) {
+    case 0:
+      echo '</br>ERROR - IP endpoint not found in ACI';
+      break;
+    case 1:
+      $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
+      $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
+      $endpoint_vlan = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["encap"];
+      echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
+      echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
+      echo '</br>DEBUG - Endpoint VLAN: '.$endpoint_vlan;
+      break;
+    default:
+      echo '</br>ERROR - IP endpoint found multiple times in ACI';
+  }
 }
 
 //############################################ Main code ##########################################
