@@ -103,12 +103,26 @@ function aci_endpoint_extract($endpoint_ip){
       $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
       $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
       $endpoint_vlan = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["encap"];
-      $endpoint_data = aci_get('/node/mo/'.$endpoint_dn.'.json');
+      $endpoint_vm_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsToVm');
+      //$endpoint_vm_dn = $endpoint_vm_info
+      //$endpoint_vm_name = $endpoint_vm_info
+      //$endpoint_vm_state = $endpoint_vm_info
+      $endpoint_host_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsHyper');
+      //$endpoint_host_dn = $endpoint_host_info
+      //$endpoint_host_name = $endpoint_host_info
+      //$endpoint_host_state = $endpoint_host_info
+      $endpoint_aci_path_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsCEpToPathEp&query-target-filter=not(wcard(fvRsCEpToPathEp.dn,"__ui_"))');
+      //$endpoint_aci_path_dn = $endpoint_aci_path_info
+      //$endpoint_aci_path_name = $endpoint_aci_path_info
       echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
       echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
       echo '</br>DEBUG - Endpoint VLAN: '.$endpoint_vlan;
-      echo '</br>DEBUG - Endpoint data: ';
-      print_r($endpoint_data);
+      echo '</br>DEBUG - Endpoint vm: ';
+      print_r($endpoint_vm_info);
+      echo '</br>DEBUG - Endpoint host: ';
+      print_r($endpoint_host_info);
+      echo '</br>DEBUG - Endpoint aci path: ';
+      print_r($endpoint_aci_path_info);
       break;
     default:
       echo '</br>ERROR - IP endpoint found multiple times in ACI';
@@ -143,12 +157,12 @@ if ($aci_tenant) {
   $pos_2 = strpos_occurrence($temp,'|',2);
   $aci_db_epg = substr($temp,$pos_2+1);
   $aci_app_profile = substr($temp,$pos_1+1,$pos_2-$pos_1-1);
-  echo 'Tenant: '.$aci_tenant;
-  echo '</br>Application profile: '.$aci_app_profile;
-  echo '</br>Database EPG: '.$aci_db_epg;
   aci_connect();
   aci_endpoint_extract($app_ip);
   aci_endpoint_extract($db_ip);
+  echo 'Tenant: '.$aci_tenant;
+  echo '</br>Application profile: '.$aci_app_profile;
+  echo '</br>Database EPG: '.$aci_db_epg;
 }
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
