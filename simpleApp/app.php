@@ -126,8 +126,8 @@ if ($aci_tenant) {
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
   aci_connect();
-  $app_mac = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,'.$app_ip.')');
-  echo '</br>DEBUG - App MAC: '.array_values($app_mac);
+  $app_mac = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,"'.$app_ip.'")');
+  print_r('</br>DEBUG - App MAC: '.array_values($app_mac));
 }
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
