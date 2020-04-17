@@ -107,6 +107,7 @@ function aci_endpoint_extract($endpoint_ip){
   switch ($endpoint_info["totalCount"]) {
     case 0:
       echo '</br>ERROR - IP endpoint not found in ACI';
+      return NULL;
       break;
     case 1:
       $endpoint_dn = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["dn"];
@@ -147,11 +148,11 @@ function aci_endpoint_extract($endpoint_ip){
         "ap" => $endpoint_ap,
         "tenant" => $endpoint_tenant,
       ];
-      echo '</br>DEBUG - Endpoint : ';
-      print_r($endpoint);
+      return $endpoint;
       break;
     default:
       echo '</br>ERROR - IP endpoint found multiple times in ACI';
+      return NULL;
   }
 }
 
@@ -178,17 +179,13 @@ echo "</table>";
 ////////////////////////////////////// ACI information display ////////////////////////////////////
 if ($aci_tenant) {
   echo '<h2>ACI informations</h2>';
-  $temp = extract_userenv('CliqrTier_'.$db_host.'_Cloud_Setting_AciPortGroup_1');
-  $pos_1 = strpos_occurrence($temp,'|',1);
-  $pos_2 = strpos_occurrence($temp,'|',2);
-  $aci_db_epg = substr($temp,$pos_2+1);
-  $aci_app_profile = substr($temp,$pos_1+1,$pos_2-$pos_1-1);
   aci_connect();
-  aci_endpoint_extract($app_ip);
-  aci_endpoint_extract($db_ip);
-  echo '</br>Tenant: '.$aci_tenant;
-  echo '</br>Application profile: '.$aci_app_profile;
-  echo '</br>Database EPG: '.$aci_db_epg;
+  $app_endpoint = aci_endpoint_extract($app_ip);
+  $db_endpoint = aci_endpoint_extract($db_ip);
+  echo '</br>App: ';
+  print_r(array_values($app_endpoint));
+  echo '</br>DB: ';
+  print_r(array_values($db_endpoint));
 }
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
