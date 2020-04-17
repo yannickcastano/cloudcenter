@@ -183,12 +183,17 @@ if ($aci_tenant) {
   $app_endpoint = aci_endpoint_extract($app_ip);
   $db_endpoint = aci_endpoint_extract($db_ip);
   //echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
-  echo "<pre>";
-  echo '</br>App: ';
-  print_r($app_endpoint);
-  echo '</br>DB: ';
-  print_r($db_endpoint);
-  echo "</pre>";
+  $data=array_count_values($app_endpoint);
+  echo '<pre>App:</br>';
+  foreach($data as $key => $value){
+    echo '[' . $key . '] =>' . $value . PHP_EOL;
+  }
+  $data=array_count_values($db_endpoint);
+  echo '<pre>DB:</br>';
+  foreach($data as $key => $value){
+    echo '[' . $key . '] =>' . $value . PHP_EOL;
+  }
+  echo '</pre>';
 }
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
