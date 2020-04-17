@@ -104,25 +104,29 @@ function aci_endpoint_extract($endpoint_ip){
       $endpoint_mac = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["mac"];
       $endpoint_vlan = $endpoint_info["imdata"][0]["fvCEp"]["attributes"]["encap"];
       $endpoint_vm_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsToVm');
-      //$endpoint_vm_dn = $endpoint_vm_info
-      //$endpoint_vm_name = $endpoint_vm_info
-      //$endpoint_vm_state = $endpoint_vm_info
+      $endpoint_vm_dn = $endpoint_vm_info["imdata"][0]["fvRsToVm"]["attributes"]["tDn"];
+      $endpoint_vm_data = aci_get('node/class/compVm.json?query-target-filter=eq(compVm.dn,"'.$endpoint_vm_dn.'")');
+      //$endpoint_vm_name = $endpoint_vm_data
+      //$endpoint_vm_state = $endpoint_vm_data
       $endpoint_host_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsHyper');
-      //$endpoint_host_dn = $endpoint_host_info
-      //$endpoint_host_name = $endpoint_host_info
-      //$endpoint_host_state = $endpoint_host_info
+      $endpoint_host_dn = $endpoint_host_info["imdata"][0]["fvRsHyper"]["attributes"]["tDn"];
+      $endpoint_host_data = aci_get('node/class/compHv.json?query-target-filter=eq(compHv.dn,"'.$endpoint_host_dn.'")');
+      //$endpoint_host_name = $endpoint_host_dn
+      //$endpoint_host_state = $endpoint_host_dn
       $endpoint_aci_path_info = aci_get('node/mo/'.$endpoint_dn.'.json?query-target=children&target-subtree-class=fvRsCEpToPathEp&query-target-filter=not(wcard(fvRsCEpToPathEp.dn,"__ui_"))');
-      //$endpoint_aci_path_dn = $endpoint_aci_path_info
-      //$endpoint_aci_path_name = $endpoint_aci_path_info
+      $endpoint_aci_path_dn = $endpoint_aci_path_info["imdata"][0]["fvRsCEpToPathEp"]["attributes"]["tDn"];
+      //$endpoint_aci_path_pod = $endpoint_aci_path_dn
+      //$endpoint_aci_path_leaf = $endpoint_aci_path_dn
+      //$endpoint_aci_path_port = $endpoint_aci_path_dn
       echo '</br>DEBUG - Endpoint DN: '.$endpoint_dn;
       echo '</br>DEBUG - Endpoint MAC: '.$endpoint_mac;
       echo '</br>DEBUG - Endpoint VLAN: '.$endpoint_vlan;
-      echo '</br>DEBUG - Endpoint vm: ';
-      print_r($endpoint_vm_info);
-      echo '</br>DEBUG - Endpoint host: ';
-      print_r($endpoint_host_info);
-      echo '</br>DEBUG - Endpoint aci path: ';
-      print_r($endpoint_aci_path_info);
+      echo '</br>DEBUG - Endpoint vm_data: ';
+      print_r($endpoint_vm_data);
+      echo '</br>DEBUG - Endpoint host_data: ';
+      print_r($endpoint_host_data);
+      echo '</br>DEBUG - Endpoint aci path_dn: ';
+      print_r($endpoint_aci_path_dn);
       break;
     default:
       echo '</br>ERROR - IP endpoint found multiple times in ACI';
