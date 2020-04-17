@@ -175,26 +175,28 @@ echo "</br>MySQL connection successful</td>";
 //------------------------------------ DB server part
 echo '<td class="tg-0">Name: '.$db_host.'</br>Hostname: '.$db_hostname.'</br> IP: '.$db_ip;
 echo "</td></tr>";
-echo "</table>";
 ////////////////////////////////////// ACI information display ////////////////////////////////////
 if ($aci_tenant) {
-  echo '<h2>ACI informations</h2>';
+  echo '<tr>ACI informations</tr>';
   aci_connect();
   $app_endpoint = aci_endpoint_extract($app_ip);
   $db_endpoint = aci_endpoint_extract($db_ip);
-  //echo '<table class="tg"><tr><th>App Server</th><th>Connection</th><th>DB Server</th></tr>';
-  $data=array_count_values($app_endpoint);
-  echo '<pre>App:</br>';
-  foreach($data as $key => $value){
+  //------------------------------------ App server part
+  echo '<tr><td class="tg-0"><pre>';
+  foreach($app_endpoint as $key => $value){
     echo '[' . $key . '] =>' . $value . PHP_EOL;
   }
-  $data=array_count_values($db_endpoint);
-  echo '<pre>DB:</br>';
-  foreach($data as $key => $value){
+  echo '</pre></td>';
+  //------------------------------------ Connection part
+  echo '<td class="tg-0"></td>';
+  //------------------------------------ DB server part
+  echo '<td class="tg-0"><pre>';
+  foreach($db_endpoint as $key => $value){
     echo '[' . $key . '] =>' . $value . PHP_EOL;
   }
-  echo '</pre>';
+  echo '</pre></td></tr>';
 }
+echo "</table>";
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
 //Get and display the content of 'people' table
