@@ -77,7 +77,6 @@ function aci_connect(){
 function aci_get($uri){
   global $aci_apic_ip, $aci_token;
   $url = "https://".$aci_apic_ip.":443/api/".$uri;
-  echo '</br>DEBUG - ACI API URL: '.$url;
   $request = curl_init($url);                                                                      
   curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
   curl_setopt($request, CURLOPT_RETURNTRANSFER, true);  
@@ -92,6 +91,12 @@ function aci_get($uri){
   }
   curl_close($request);
   return $result;
+}
+//Get details about endpoint using ACI REST API
+function aci_endpoint_extract($endpoint_ip){
+  $endpoint_info = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,"'.$endpoint_ip.'")');
+  echo '</br>DEBUG - Endpoint info: '.print_r($endpoint_info);
+
 }
 
 //############################################ Main code ##########################################
@@ -126,8 +131,8 @@ if ($aci_tenant) {
   echo '</br>Application profile: '.$aci_app_profile;
   echo '</br>Database EPG: '.$aci_db_epg;
   aci_connect();
-  $app_mac = aci_get('node/class/fvCEp.json?query-target-filter=eq(fvCEp.ip,"'.$app_ip.'")');
-  echo '</br>DEBUG - App MAC: '.print_r(array_values($app_mac));
+  aci_endpoint_extract($app_ip);
+  aci_endpoint_extract($db_ip);
 }
 //////////////////////////////////// Database information display /////////////////////////////////
 echo '<h2>Database</h2>';
