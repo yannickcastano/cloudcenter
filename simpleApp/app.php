@@ -177,14 +177,14 @@ echo '<td class="tg-0">[Name]: '.$db_host.'</br>[Hostname]: '.$db_hostname.'</br
 echo "</td></tr>";
 ////////////////////////////////////// ACI information display ////////////////////////////////////
 if ($aci_tenant) {
-  echo '<tr><td>ACI informations</td></tr>';
+  echo '<tr><td class="tg-0" colspan="3">ACI informations</td></tr>';
   aci_connect();
   $app_endpoint = aci_endpoint_extract($app_ip);
   $db_endpoint = aci_endpoint_extract($db_ip);
   //------------------------------------ App server part
   echo '<tr><td class="tg-0">';
   foreach($app_endpoint as $key => $value){
-    echo '['.$key.']: '.$value.PHP_EOL;
+    echo '['.$key.']: '.$value.'</br>';
   }
   echo '</td>';
   //------------------------------------ Connection part
@@ -192,7 +192,7 @@ if ($aci_tenant) {
   //------------------------------------ DB server part
   echo '<td class="tg-0">';
   foreach($db_endpoint as $key => $value){
-    echo '['.$key.']: '.$value.PHP_EOL;
+    echo '['.$key.']: '.$value.'</br>';
   }
   echo '</td></tr>';
 }
