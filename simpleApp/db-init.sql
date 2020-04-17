@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS people (
   INDEX(last_name)
 ) engine=InnoDB;
 
-INSERT INTO people (first_name, last_name) VALUES ('yannick', 'castano');
+INSERT INTO people (first_name,last_name) VALUES ('francois','couderc'),('julien','couturier'),('marc','picovsky'),('sylvain','larue'),('yannick','castano');
 
 CREATE TABLE IF NOT EXISTS styles (
   id INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
