@@ -1,5 +1,5 @@
 #!/bin/bash
-source /usr/local/osmosix/etc/userenv
+#source /usr/local/osmosix/etc/userenv
 #-- restart apache to get php lib loadded
 sudo service apache2 restart
 #-- download php app
